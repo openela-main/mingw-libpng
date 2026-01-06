@@ -1,0 +1,12 @@
+diff --git a/libpng-config.in b/libpng-config.in
+index 3739eb9..7f6b2cc 100644
+--- a/libpng-config.in
++++ b/libpng-config.in
+@@ -13,7 +13,6 @@
+ 
+ version=`pkg-config --modversion libpng`
+ prefix=`pkg-config --variable prefix libpng`
+-exec_prefix=`pkg-config --variable exec_prefix libpng`
+ libdir=`pkg-config --variable libdir libpng`
+ includedir=`pkg-config --variable includedir libpng`
+ libs="-lpng@PNGLIB_MAJOR@@PNGLIB_MINOR@"

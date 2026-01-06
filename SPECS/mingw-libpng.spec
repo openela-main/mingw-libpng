@@ -1,19 +1,31 @@
 %?mingw_package_header
 
 Name:           mingw-libpng
-Version:        1.6.29
-Release:        4%{?dist}
+Version:        1.6.34
+Release:        1%{?dist}
 Summary:        MinGW Windows Libpng library
 
 License:        zlib
 URL:            http://www.libpng.org/pub/png/
 # Note: non-current tarballs get moved to the history/ subdirectory,
 # so look there if you fail to retrieve the version you want
-Source0:        ftp://ftp.simplesystems.org/pub/png/src/libpng16/libpng-%{version}.tar.xz
+Source0:       https://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-%{version}.tar.xz
+Source1:       pngusr.dfa
+Patch0:        libpng-multilib.patch
+Patch1:        libpng-fix-arm-neon.patch
+Patch2:        libpng-CVE-2018-13785.patch
+Patch3:        libpng-coverity.patch
+Patch4:        libpng-1.6-CVE-2025-64720.patch
+Patch5:        libpng-1.6-CVE-2025-65018_p1of2.patch
+Patch6:        libpng-1.6-CVE-2025-65018_p2of2.patch
+Patch7:        libpng-1.6-CVE-2025-66293_p1of2.patch
+Patch8:        libpng-1.6-CVE-2025-66293_p2of2.patch
 
 BuildArch:      noarch
 ExclusiveArch: %{ix86} x86_64
 
+BuildRequires: zlib-devel
+BuildRequires: autoconf automake libtool
 BuildRequires:  mingw32-filesystem >= 95
 BuildRequires:  mingw32-gcc
 BuildRequires:  mingw32-binutils
@@ -69,7 +81,20 @@ This package contains static cross-compiled libraries.
 
 %prep
 %setup -q -n libpng-%{version}
+# Provide pngusr.dfa for build.
+cp -p %{SOURCE1} .
 
+%patch -P 0 -p1
+%patch -P 1 -p1 -b .arm
+%patch -P 2 -p1 -b .CVE-2018-13785
+%patch -P 3 -p1 -b .coverity
+%patch -P 4 -p1 -b .CVE-2025-64720
+%patch -P 5 -p1 -b .CVE-2025-65018_p1of2
+%patch -P 6 -p1 -b .CVE-2025-65018_p2of2
+%patch -P 7 -p1 -b .CVE-2025-66293_p1of2
+%patch -P 8 -p1 -b .CVE-2025-66293_p2of2
+
+autoreconf -vif
 
 %build
 %mingw_configure
@@ -134,6 +159,14 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_mandir}
 
 
 %changelog
+* Sat Dec 27 2025 Lili Zhu <lizhu@redhat.com> - 1.6.34-1
+- Rebase to version 1.6.34
+- Fix the following CVEs
+  CVE-2025-64720 CVE-2025-65018 CVE-2025-66293
+- Resolves: RHEL-131458
+- Resolves: RHEL-131471
+- Resolves: RHEL-133229
+
 * Tue Aug 14 2018 Victor Toso <victortoso@redhat.com> - 1.6.29-4
 - ExclusiveArch: i686, x86_64
 - Related: rhbz#1615874
