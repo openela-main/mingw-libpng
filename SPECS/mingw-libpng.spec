@@ -2,7 +2,7 @@
 
 Name:           mingw-libpng
 Version:        1.6.34
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows Libpng library
 
 License:        zlib
@@ -26,6 +26,12 @@ Patch9:        libpng-1.6-cve-2026-22695.patch
 Patch10:       libpng-1.6-cve-2026-22801.patch
 # https://github.com/pnggroup/libpng/commit/01d03b8453eb30ade759cd45c707e5a1c7277d88
 Patch11:       libpng-1.6-cve-2026-25646.patch
+# https://github.com/pnggroup/libpng/commit/23019269764e35ed8458e517f1897bd3c54820eb
+# https://github.com/pnggroup/libpng/commit/a3a21443ed12bfa1ef46fa0d4fb2b74a0fa34a25
+# https://github.com/pnggroup/libpng/commit/7ea9eea884a2328cc7fdcb3c0c00246a50d90667
+# https://github.com/pnggroup/libpng/commit/c1b0318b393c90679e6fa5bc1d329fd5d5012ec1
+# https://github.com/pnggroup/libpng/commit/d4c4e49eb5c8981075ec2cd946428758c0cda6ac
+Patch12:       libpng-1.6-cve-2026-33416.patch
 
 BuildArch:      noarch
 ExclusiveArch: %{ix86} x86_64
@@ -102,6 +108,7 @@ cp -p %{SOURCE1} .
 %patch -P 9 -p1 -b .cve-2026-22695
 %patch -P 10 -p1 -b .cve-2026-22801
 %patch -P 11 -p1 -b .cve-2026-25646
+%patch -P 12 -p1 -b .cve-2026-33416
 
 autoreconf -vif
 
@@ -168,6 +175,11 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_mandir}
 
 
 %changelog
+* Tue Jul 07 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 1.6.34-3
+- Fix CVE-2026-33416: use-after-free on png_ptr->trans_alpha and
+  png_ptr->palette
+- Resolves: RHEL-161347
+
 * Tue Mar 10 2026 Lili Zhu <lizhu@redhat.com> - 1.6.34-2
 - Fix the following CVEs
   CVE-2026-22695 CVE-2026-22801 CVE-2026-25646
